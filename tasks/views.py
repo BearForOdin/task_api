@@ -2,10 +2,19 @@ from rest_framework import viewsets, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Task
 from .serializers import TaskSerializer, TaskStatusSerializer
 from .permissions import IsOwner
+
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
